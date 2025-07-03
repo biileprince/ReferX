@@ -421,7 +421,8 @@ export const refreshToken = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: 'lax'
+      sameSite: 'none',
+       domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
     });
     
     res.status(200).json({ 

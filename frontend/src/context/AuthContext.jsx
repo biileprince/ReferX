@@ -65,7 +65,7 @@ useEffect(() => {
       
       // Store tokens
       localStorage.setItem('token', response.token);
-      localStorage.setItem('refreshToken', response.refreshToken);
+   
       
       // Store user data
       localStorage.setItem('user', JSON.stringify(response.user));
