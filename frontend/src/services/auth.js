@@ -106,21 +106,21 @@ export const getCurrentUser = async () => {
   }
 };
 
-// export const refreshToken = async () => {
-//   try {
-//     const response = await api.post('/auth/refresh-token');
-//     return response.data.token;
-//   } catch (error) {
+export const refreshToken = async () => {
+  try {
+    const response = await api.post('/auth/refresh-token');
+    return response.data.token;
+  } catch (error) {
    
-//     if (error.response?.status === 401) {
-//       throw new Error('Session expired. Please login again');
-//     }
-//     throw new Error(
-//       error.response?.data?.message || 
-//       'Token refresh failed'
-//     );
-//   }
-// };
+    if (error.response?.status === 401) {
+      throw new Error('Session expired. Please login again');
+    }
+    throw new Error(
+      error.response?.data?.message || 
+      'Token refresh failed'
+    );
+  }
+};
 export const updateProfile = async (profileData) => {
   try {
     const response = await api.put('/auth/profile', profileData);
