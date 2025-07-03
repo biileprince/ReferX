@@ -75,7 +75,7 @@ const Sidebar = () => {
             <p className="text-xs text-indigo-200 mt-1">Smart Referral Tracking</p>
           </div>
           
-          <div className="mt-3 flex items-center justify-center bg-white bg-opacity-20 rounded-full px-3 py-1">
+          <div className="mt-3 flex items-center justify-center bg-white bg-opacity-20 rounded-full px-3 py-1 mb-3">
             <FiStar className="text-yellow-300 mr-1" />
             <span className="text-white text-sm font-medium">{user?.points || 0} points</span>
           </div>
