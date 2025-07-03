@@ -22,34 +22,26 @@ useEffect(() => {
   const initializeAuth = async () => {
     try {
       const token = localStorage.getItem('token');
-      const storedUser = localStorage.getItem('user');
       
-      // Always try to get current user if token exists
       if (token) {
         try {
           const userData = await getCurrentUser();
           setUser(userData);
           setIsAuthenticated(true);
-          // Update stored user data
-          localStorage.setItem('user', JSON.stringify(userData));
         } catch (error) {
-          // Try to refresh token only if it's an auth error
           if (error.message === 'Unauthorized') {
             try {
               const newToken = await refreshToken();
-              localStorage.setItem('token', newToken);
-              
-              // Retry getting current user
-              const userData = await getCurrentUser();
-              setUser(userData);
-              setIsAuthenticated(true);
-              localStorage.setItem('user', JSON.stringify(userData));
+              if (newToken) {
+                localStorage.setItem('token', newToken);
+                const userData = await getCurrentUser();
+                setUser(userData);
+                setIsAuthenticated(true);
+              }
             } catch (refreshError) {
               console.error('Token refresh failed', refreshError);
               handleLogout();
             }
-          } else {
-            console.error('Error getting current user', error);
           }
         }
       }
@@ -64,25 +56,22 @@ useEffect(() => {
 }, [handleLogout]);
 
   const loginUser = useCallback(async (credentials) => {
-    try {
-      const response = await login(credentials);
-      
-      // Store tokens
-      localStorage.setItem('token', response.token);
-   
-      
-      // Store user data
-      localStorage.setItem('user', JSON.stringify(response.user));
-      
-      setUser(response.user);
-      setIsAuthenticated(true);
-      
-      return response;
-    } catch (error) {
-      console.error('Login failed', error);
-      throw error;
-    }
-  }, []);
+  try {
+    const response = await login(credentials);
+    
+    // Store access token only
+    localStorage.setItem('token', response.token);
+    localStorage.setItem('user', JSON.stringify(response.user));
+    
+    setUser(response.user);
+    setIsAuthenticated(true);
+    
+    return response;
+  } catch (error) {
+    console.error('Login failed', error);
+    throw error;
+  }
+}, []);
 
   const logoutUser = useCallback(async () => {
     try {

@@ -361,7 +361,8 @@ export const login = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: 'strict'
+      sameSite: 'none', // Required for cross-site requests
+      domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : 'localhost'
     });
 
     // Send response
@@ -422,19 +423,12 @@ export const refreshToken = async (req, res) => {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: 'none',
-       domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined
+      domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : 'localhost'
     });
     
     res.status(200).json({ 
       success: true, 
       token: newToken,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        points: user.points,
-        referralCode: user.referralCode
-      }
     });
   } catch (err) {
     // Handle token expiration specifically
