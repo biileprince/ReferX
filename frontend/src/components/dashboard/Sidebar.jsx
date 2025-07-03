@@ -8,8 +8,6 @@ import {
   FiLogOut,
   FiMenu,
   FiX,
-  FiBarChart2,
-  FiSettings,
   FiStar
 } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
@@ -84,15 +82,14 @@ const Sidebar = () => {
         </div>
         
         {/* User Info */}
-        <div className="px-4 py-3 flex items-center border-b border-gray-100">
+        <div className="px-4 py-3 flex items-center justify-center border-b border-gray-100">
           <div className="bg-gray-200 border-2 border-dashed rounded-full w-10 h-10 flex items-center justify-center">
             <span className="font-medium text-gray-700">
               {user?.name?.charAt(0) || 'U'}
             </span>
           </div>
           <div className="ml-3">
-            <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'User'}</p>
-            <p className="text-xs text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
+            <p className="text-sm font-medium text-gray-900 truncate max-w-[120px]">{user?.name || 'User'}</p>
           </div>
         </div>
         
@@ -121,23 +118,6 @@ const Sidebar = () => {
                 )}
               </Link>
             ))}
-            
-            <div className="px-4 pt-5">
-              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Settings</h3>
-            </div>
-            
-            <Link
-              to="/settings"
-              className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-                location.pathname === '/settings'
-                  ? 'bg-gray-100 text-gray-900 shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <FiSettings className="mr-3 h-5 w-5 text-gray-500" />
-              Settings
-            </Link>
           </nav>
         </div>
         
