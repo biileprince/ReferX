@@ -1,0 +1,12 @@
+.env
+node_modules
+dist
+dist-ssr
+# Logs
+logs
+
+
+
+
+
+
