@@ -21,16 +21,16 @@ export default class EmailSender {
 
   newTransport() {
     // Use SendGrid for production, Mailtrap for development
-    
-    if (process.env.NODE_ENV === 'production') {
+
+     if (process.env.NODE_ENV === 'production') {
       return nodemailer.createTransport({
-        host: 'smtp.sendgrid.net',
-        port: 587,
-        auth: {
-          user: 'apikey',
-          pass: process.env.SENDGRID_API_KEY
-        }
-      });
+      host: 'smtp.sendgrid.net',
+      port: 587,
+      auth: {
+        user: 'apikey',
+        pass: process.env.SENDGRID_API_KEY
+      }
+    });
     }
 
     // Development transport (Mailtrap)

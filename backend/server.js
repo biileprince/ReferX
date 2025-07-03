@@ -30,11 +30,12 @@ app.use(helmet(
   }
 ));
 app.use(cors({
-//allow all acess
-  origin: true,
-  
-  credentials: true
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token']
 }));
+
 app.use(rateLimit);
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
