@@ -22,30 +22,34 @@ useEffect(() => {
   const initializeAuth = async () => {
     try {
       const token = localStorage.getItem('token');
-      const refreshTokenValue = localStorage.getItem('refreshToken');
+      const storedUser = localStorage.getItem('user');
       
-      if (token && refreshTokenValue) {
+      // Always try to get current user if token exists
+      if (token) {
         try {
           const userData = await getCurrentUser();
           setUser(userData);
           setIsAuthenticated(true);
+          // Update stored user data
+          localStorage.setItem('user', JSON.stringify(userData));
         } catch (error) {
+          // Try to refresh token only if it's an auth error
           if (error.message === 'Unauthorized') {
             try {
               const newToken = await refreshToken();
-              if (newToken) {
-                localStorage.setItem('token', newToken);
-                const userData = await getCurrentUser();
-                setUser(userData);
-                setIsAuthenticated(true);
-              }
+              localStorage.setItem('token', newToken);
+              
+              // Retry getting current user
+              const userData = await getCurrentUser();
+              setUser(userData);
+              setIsAuthenticated(true);
+              localStorage.setItem('user', JSON.stringify(userData));
             } catch (refreshError) {
               console.error('Token refresh failed', refreshError);
-   
-              if (refreshError.message.includes('Session expired')) {
-                handleLogout();
-              }
+              handleLogout();
             }
+          } else {
+            console.error('Error getting current user', error);
           }
         }
       }

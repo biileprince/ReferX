@@ -9,37 +9,35 @@ const api = axios.create({
 
 // Request interceptor to add auth token to headers
 api.interceptors.request.use(
-  (config) => {
+  config => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error)
 );
 
-// Response interceptor to handle errors
 api.interceptors.response.use(
   response => response,
   async error => {
     const originalRequest = error.config;
     
+    // Only handle 401 errors and avoid infinite loops
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       
       try {
-        const response = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
-          {},
-          { withCredentials: true }
-        );
+        // Use the same axios instance for token refresh
+        const response = await api.post('/auth/refresh-token');
         
         const newToken = response.data.token;
         localStorage.setItem('token', newToken);
         
+        // Update the original request with new token
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return axios(originalRequest);
+        return api(originalRequest);
       } catch (refreshError) {
         console.error('Token refresh failed', refreshError);
         localStorage.removeItem('token');

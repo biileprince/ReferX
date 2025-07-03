@@ -106,12 +106,18 @@ export const getCurrentUser = async () => {
   }
 };
 
+// src/services/auth.js
 export const refreshToken = async () => {
   try {
     const response = await api.post('/auth/refresh-token');
+    
+    // Ensure we have a token in the response
+    if (!response.data.token) {
+      throw new Error('No token in refresh response');
+    }
+    
     return response.data.token;
   } catch (error) {
-   
     if (error.response?.status === 401) {
       throw new Error('Session expired. Please login again');
     }
