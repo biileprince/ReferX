@@ -1,4 +1,3 @@
-// src/components/dashboard/Sidebar.jsx
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
@@ -10,7 +9,8 @@ import {
   FiMenu,
   FiX,
   FiBarChart2,
-  FiSettings
+  FiSettings,
+  FiStar
 } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 
@@ -40,7 +40,7 @@ const Sidebar = () => {
     <>
       {/* Mobile menu button */}
       <button
-        className="md:hidden fixed top-4 left-4 z-20 p-2 rounded-md text-gray-700 bg-white shadow"
+        className="md:hidden fixed top-4 left-4 z-20 p-2 rounded-md text-gray-700 bg-white shadow-lg"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
       >
         {mobileMenuOpen ? (
@@ -50,7 +50,7 @@ const Sidebar = () => {
         )}
       </button>
 
-      {/* Mobile sidebar */}
+      {/* Mobile sidebar overlay */}
       <div
         className={`fixed inset-0 z-10 bg-gray-800 bg-opacity-50 backdrop-blur-sm md:hidden transition-opacity ${
           mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -62,56 +62,90 @@ const Sidebar = () => {
       <div
         className={`fixed inset-y-0 left-0 z-20 w-64 bg-gradient-to-b from-white to-gray-50 shadow-lg transform transition-transform duration-300 ease-in-out md:translate-x-0 ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:static md:flex md:flex-col border-r border-gray-100`}
+        } md:static md:flex md:flex-col border-r border-gray-100 flex flex-col`}
       >
-        <div className="flex flex-col items-center justify-center h-40 px-4 border-b border-gray-100 bg-gradient-to-r from-primary-50 to-indigo-50">
-          <div className="bg-gradient-to-r from-primary-500 to-indigo-500 p-2 rounded-lg shadow">
-            <div className="bg-white border-2 border-dashed rounded-lg w-10 h-10 flex items-center justify-center">
-              <span className="font-bold text-primary-600">RR</span>
-            </div>
-          </div>
-          <div className="mt-4 text-center">
-            <span className="text-xl font-bold text-gray-900">ReferralRewards</span>
-            <p className="text-xs text-gray-500 mt-1">Premium Dashboard</p>
-          </div>
-        </div>
-        
-        <div className="flex-1 overflow-y-auto py-5 px-4">
-          <div className="mb-6 px-3 py-2 bg-gray-50 rounded-lg">
-            <p className="text-xs text-gray-500">Account Balance</p>
-            <div className="flex items-baseline">
-              <span className="text-xl font-bold text-primary-600">{user?.points || 0}</span>
-              <span className="text-xs text-gray-500 ml-1">points</span>
+        {/* Brand Header */}
+        <div className="flex flex-col items-center justify-center h-40 px-4 bg-gradient-to-r from-primary-500 to-indigo-600 pt-6">
+          <div className="bg-white p-1 rounded-full shadow-lg mb-3">
+            <div className="bg-gradient-to-r from-primary-500 to-indigo-600 w-12 h-12 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-xl">RX</span>
             </div>
           </div>
           
+          <div className="text-center">
+            <h1 className="text-xl font-bold text-white">ReferX Dashboard</h1>
+            <p className="text-xs text-indigo-200 mt-1">Smart Referral Tracking</p>
+          </div>
+          
+          <div className="mt-3 flex items-center justify-center bg-white bg-opacity-20 rounded-full px-3 py-1">
+            <FiStar className="text-yellow-300 mr-1" />
+            <span className="text-white text-sm font-medium">{user?.points || 0} points</span>
+          </div>
+        </div>
+        
+        {/* User Info */}
+        <div className="px-4 py-3 flex items-center border-b border-gray-100">
+          <div className="bg-gray-200 border-2 border-dashed rounded-full w-10 h-10 flex items-center justify-center">
+            <span className="font-medium text-gray-700">
+              {user?.name?.charAt(0) || 'U'}
+            </span>
+          </div>
+          <div className="ml-3">
+            <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'User'}</p>
+            <p className="text-xs text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
+          </div>
+        </div>
+        
+        {/* Navigation */}
+        <div className="flex-1 overflow-y-auto py-5 px-3">
           <nav className="space-y-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all ${
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
                   location.pathname === item.href
-                    ? 'bg-primary-500 text-white shadow-sm'
+                    ? 'bg-primary-100 text-primary-600 shadow-sm border-l-4 border-primary-500'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <item.icon 
-                  className={`mr-3 h-4 w-4 ${
-                    location.pathname === item.href ? 'text-white' : 'text-gray-500'
+                  className={`mr-3 h-5 w-5 ${
+                    location.pathname === item.href ? 'text-primary-500' : 'text-gray-500'
                   }`} 
                 />
                 {item.name}
+                {location.pathname === item.href && (
+                  <div className="ml-auto w-2 h-2 rounded-full bg-primary-500"></div>
+                )}
               </Link>
             ))}
+            
+            <div className="px-4 pt-5">
+              <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Settings</h3>
+            </div>
+            
+            <Link
+              to="/settings"
+              className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
+                location.pathname === '/settings'
+                  ? 'bg-gray-100 text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <FiSettings className="mr-3 h-5 w-5 text-gray-500" />
+              Settings
+            </Link>
           </nav>
         </div>
         
+        {/* Logout Button */}
         <div className="p-4 border-t border-gray-100">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg group"
+            className="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg group transition-colors duration-200"
           >
             <FiLogOut className="mr-2 h-4 w-4 text-gray-500 group-hover:text-red-500" />
             <span className="group-hover:text-red-600">Sign out</span>

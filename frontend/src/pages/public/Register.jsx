@@ -49,7 +49,7 @@ const Register = () => {
         <div className="mt-8 bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <RegisterForm onSubmit={handleRegister} isLoading={isLoading} />
           
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300"></div>
@@ -69,7 +69,7 @@ const Register = () => {
                 </div>
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </AuthLayout>
